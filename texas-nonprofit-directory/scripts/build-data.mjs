@@ -10,10 +10,12 @@
 //   index.json        compact search index, one row per organization
 //   orgs/NN.json      full records, sharded by the first two digits of the EIN
 //   meta.json         build date, source, record count
+//   badges/<EIN>.svg  embeddable Star badges for approved profiles (see build-badges.mjs)
 
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildBadges } from "./build-badges.mjs";
 
 const IRS_URL = "https://www.irs.gov/pub/irs-soi/eo_tx.csv";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -114,10 +116,10 @@ for (const r of records) {
     ntee: get(r, "NTEE_CD"),
     sortName: titleCase(get(r, "SORT_NAME")),
   };
-  // Compact index row: [ein, name, city, zip5, ntee, subsection, revenue, rulingYear, deductibility, sortName]
+  // Compact index row: [ein, name, city, zip5, ntee, subsection, revenue, rulingYear, deductibility, sortName, assets]
   index.push([
     org.ein, org.name, org.city, org.zip.slice(0, 5), org.ntee, org.subsection,
-    org.revenue, ruling ? Number(ruling.slice(0, 4)) || 0 : 0, org.deductibility, org.sortName,
+    org.revenue, ruling ? Number(ruling.slice(0, 4)) || 0 : 0, org.deductibility, org.sortName, org.assets,
   ]);
   (shards[ein.slice(0, 2)] ??= {})[ein] = org;
 }
@@ -138,3 +140,4 @@ const meta = {
 };
 await writeFile(join(OUT, "meta.json"), JSON.stringify(meta, null, 2));
 console.log(`Wrote ${index.length} Texas organizations across ${Object.keys(shards).length} shards.`);
+await buildBadges();

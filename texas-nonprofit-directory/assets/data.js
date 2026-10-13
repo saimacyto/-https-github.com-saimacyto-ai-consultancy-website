@@ -1,7 +1,7 @@
 // Loading helpers for the generated data files (see scripts/build-data.mjs).
 
 // Index row layout — keep in sync with build-data.mjs.
-export const F = { EIN: 0, NAME: 1, CITY: 2, ZIP: 3, NTEE: 4, SUB: 5, REV: 6, YEAR: 7, DED: 8, SORT: 9 };
+export const F = { EIN: 0, NAME: 1, CITY: 2, ZIP: 3, NTEE: 4, SUB: 5, REV: 6, YEAR: 7, DED: 8, SORT: 9, ASSETS: 10 };
 
 let indexPromise;
 export function loadIndex() {

@@ -162,3 +162,18 @@ export const compactMoney = (n) =>
 
 export const escapeHTML = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+// One hue per NTEE major group, used for avatars and cause tiles.
+const CAUSE_HUE = {
+  A: 330, B: 215, C: 140, D: 28, E: 0, F: 265, G: 350, H: 190, I: 230, J: 45, K: 95, L: 20, M: 5,
+  N: 170, O: 200, P: 255, Q: 205, R: 300, S: 160, T: 40, U: 185, V: 280, W: 220, X: 250, Y: 60, Z: 210,
+};
+export const causeHue = (ntee) => CAUSE_HUE[(ntee || "Z")[0]] ?? 210;
+
+const SMALL_WORDS = new Set(["of", "the", "and", "for", "in", "at", "to", "a", "an", "inc", "llc"]);
+export const initials = (name) =>
+  name.split(/\s+/).filter((w) => w && !SMALL_WORDS.has(w.toLowerCase()) && /[a-z0-9]/i.test(w))
+    .slice(0, 2).map((w) => w.replace(/[^a-z0-9]/gi, "")[0]?.toUpperCase() ?? "").join("") || "?";
+
+export const avatar = (name, ntee, size = "") =>
+  `<span class="avatar ${size}" style="--h:${causeHue(ntee)}" aria-hidden="true">${escapeHTML(initials(name))}</span>`;

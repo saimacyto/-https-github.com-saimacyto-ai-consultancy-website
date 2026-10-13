@@ -29,6 +29,45 @@ a banner appears whenever sample data is loaded. To rebuild the sample: `node sc
 
 | File | Contents |
 | --- | --- |
-| `data/index.json` | Compact search index, one array per org: `[ein, name, city, zip, ntee, subsection, revenue, rulingYear, deductibility, sortName]` |
+| `data/index.json` | Compact search index, one array per org: `[ein, name, city, zip, ntee, subsection, revenue, rulingYear, deductibility, sortName, assets]` |
 | `data/orgs/NN.json` | Full records keyed by EIN, sharded by the EIN's first two digits |
 | `data/meta.json` | Build time, source and record count |
+
+## Transparency Stars & membership
+
+Two separate ladders, modeled on Candid's Seals of Transparency:
+
+- **Transparency Stars** (free, earned): Verified → Bronze → Silver → Gold → Platinum. Each level asks the organization to share more. Stars give a small boost in search ranking.
+- **Membership plans** (paid, optional): Community (free), Plus, Premier. These add tools such as donate buttons, analytics and grant alerts. They never change a Star or search ranking.
+- **Data plans** for funders and researchers: Funder Pro and Funder Compliance, shown as "Coming soon" until `funderPlansLive` is set in `assets/config.js`.
+
+Prices, discounts, payment links and where claim applications go are all set in `assets/config.js`.
+
+### Approving a claim
+
+1. An organization submits `claim.html`. The application goes to `claimEndpoint` (for example, a Formspree form) or opens an email to `contactEmail`.
+2. Check the EIN and the applicant. An email at the organization's website domain is the strongest signal.
+3. Add the organization to `data/verified.json`, keyed by its 9-digit EIN, then commit. The next deploy shows its Star and details, and creates its website badge at `data/badges/<EIN>.svg`.
+4. Send the organization its badge page: `badge.html?ein=<EIN>`. It has a preview and copy-paste code. The badge year comes from `verifiedOn`, so update that date at each annual review.
+
+To rebuild badges without re-downloading IRS data, run `node scripts/build-badges.mjs`.
+
+```json
+{
+  "741234567": {
+    "level": "gold",                    // verified | bronze | silver | gold | platinum
+    "plan": "plus",                     // community | plus | premier
+    "verifiedOn": "2026-10-13",
+    "mission": "…", "website": "https://…", "email": "…", "phone": "…", "logo": "https://…",
+    "donateUrl": "https://…", "serviceArea": "…",
+    "leader": { "name": "…", "title": "Executive Director" }, "boardChair": "…", "board": ["…"],
+    "programs": [{ "name": "…", "description": "…" }],
+    "budget": 720000, "revenueSources": [{ "source": "Foundations", "pct": 31 }], "reportUrl": "https://…",
+    "goals": "…", "strategies": "…",
+    "results": [{ "metric": "Families served", "value": "4,120", "year": 2025 }]
+  }
+}
+```
+(Comments are for illustration only; JSON doesn't allow them.)
+
+Links in this file are only shown if they start with `http://` or `https://`.

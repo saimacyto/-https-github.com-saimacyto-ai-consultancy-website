@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search · Texas Nonprofit Directory</title>
+  <meta name="description" content="Search every IRS-recognized tax-exempt organization in Texas by name, city, cause and size.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z%27 fill=%27%23c2532f%27/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="preload" href="data/index.json" as="fetch" crossorigin>
+</head>
+<body>
+  <header id="site-header"></header>
+  <div id="notice" class="notice" hidden><div class="wrap"></div></div>
+  <section class="hero hero-slim">
+    <div class="wrap">
+      <form id="search" class="searchbar" role="search">
+        <label class="field">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span class="sr-only">Organization name, cause or EIN</span>
+          <input name="q" type="search" placeholder="Search by name, cause or EIN" autocomplete="off">
+        </label>
+        <label class="field">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span class="sr-only">City or ZIP code</span>
+          <input name="city" type="text" placeholder="City or ZIP" list="city-list" autocomplete="off">
+        </label>
+        <datalist id="city-list"></datalist>
+        <button type="button" class="filters-btn" id="filters-btn" aria-expanded="false" aria-controls="filter-drawer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          Filters <span class="count-pill" id="filter-count" hidden></span>
+        </button>
+        <button type="submit">Search</button>
+      </form>
+      <p class="quick" style="display:block;margin-top:12px"><b>Looking for a specific organization?</b> Use quotation marks to search by exact name. Example: "Feeding Texas"</p>
+      <form id="filters" class="filter-drawer" hidden>
+        <div class="filter-grid" id="filter-drawer">
+          <div>
+            <label class="lbl" for="cause">Cause area</label>
+            <select id="cause" name="cause"><option value="">All causes</option></select>
+          </div>
+          <div>
+            <label class="lbl" for="type">Organization type</label>
+            <select id="type" name="type">
+              <option value="">All types</option>
+              <option value="03">501(c)(3) charities</option>
+              <option value="04">501(c)(4) social welfare</option>
+              <option value="05">501(c)(5) labor &amp; agricultural</option>
+              <option value="06">501(c)(6) business leagues</option>
+              <option value="07">501(c)(7) social clubs</option>
+              <option value="08">501(c)(8) fraternal societies</option>
+              <option value="19">501(c)(19) veterans</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl" for="size">Annual revenue</label>
+            <select id="size" name="size">
+              <option value="">Any size</option>
+              <option value="0-0">None reported</option>
+              <option value="1-99999">Under $100K</option>
+              <option value="100000-999999">$100K – $1M</option>
+              <option value="1000000-9999999">$1M – $10M</option>
+              <option value="10000000-">$10M+</option>
+            </select>
+          </div>
+          <div>
+            <span class="lbl">Exempt since</span>
+            <div class="row">
+              <input name="from" type="number" min="1900" max="2100" placeholder="From" aria-label="Exempt since, from year">
+              <input name="to" type="number" min="1900" max="2100" placeholder="To" aria-label="Exempt since, to year">
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <div>
+            <label class="check"><input type="checkbox" name="deductible" value="1"> Tax-deductible donations</label>
+            <label class="check"><input type="checkbox" name="starred" value="1"> Has a Transparency Star</label>
+          </div>
+          <button type="button" class="link-btn" id="reset">Clear filters</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <main id="results-top">
+    <div class="wrap">
+      <div class="summary-line">
+        <p id="summary">Loading organizations…</p>
+        <button type="button" class="link-btn" data-clear="q" id="clear-keywords" hidden>Clear keywords</button>
+      </div>
+      <button type="button" class="save-search" id="save-search" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg> Save this search</button>
+      <div class="active-filters" id="active-filters"></div>
+
+      <div class="tabs" role="tablist" aria-label="Organization groups">
+        <button role="tab" data-tab="all" aria-selected="true">All organizations</button>
+        <button role="tab" data-tab="charities" aria-selected="false">Public charities</button>
+        <button role="tab" data-tab="other" aria-selected="false">Other exempt orgs</button>
+        <button role="tab" data-tab="starred" aria-selected="false">With a Star</button>
+      </div>
+      <div class="results-bar">
+        <span class="count" id="count" aria-live="polite"></span>
+        <div class="right">
+          <div class="view-toggle" role="group" aria-label="View">
+            <button type="button" data-view="list" aria-pressed="true" aria-label="List view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16"/><path d="M7 9h10M7 13h10M7 17h6"/></svg></button>
+            <button type="button" data-view="table" aria-pressed="false" aria-label="Table view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16"/><path d="M3 10h18M9 4v16M15 4v16"/></svg></button>
+          </div>
+          <label class="sort"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>
+            <span class="sr-only">Sort by</span>
+            <select id="sort">
+              <option value="relevance">Sort: Relevance</option>
+              <option value="name">Sort: Name (A–Z)</option>
+              <option value="revenue">Sort: Largest revenue</option>
+              <option value="assets">Sort: Largest assets</option>
+              <option value="newest">Sort: Newest</option>
+              <option value="oldest">Sort: Oldest</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div id="results"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      <nav class="pager" id="pager" aria-label="Pagination"></nav>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <footer id="site-footer"></footer>
+  <script type="module" src="assets/layout.js"></script>
+  <script type="module" src="assets/search.js"></script>
+</body>
+</html>
