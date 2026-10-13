@@ -157,7 +157,7 @@ function render(o, v) {
   root.innerHTML = `
     <section class="profile-hero">
       <div class="wrap">
-        <nav class="crumbs" aria-label="Breadcrumb"><a href="./">Explore</a> / <a href="./?city=${encodeURIComponent(o.city)}#explore">${escapeHTML(o.city)}</a> / <span>${escapeHTML(o.name)}</span></nav>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="./">Dashboard</a> / <a href="search.html?city=${encodeURIComponent(o.city)}">${escapeHTML(o.city)}</a> / <span>${escapeHTML(o.name)}</span></nav>
         <div class="profile-head">
           ${logo ? `<span class="avatar lg" style="background:#fff"><img src="${escapeHTML(logo)}" alt=""></span>` : avatar(o.name, o.ntee, "lg")}
           <div class="who">
@@ -171,7 +171,7 @@ function render(o, v) {
             </div>
           </div>
           <div class="profile-actions">
-            ${donate ? `<a class="btn" href="${escapeHTML(donate)}" target="_blank" rel="noopener">Donate</a>` : ""}
+            ${donate ? `<a class="btn donate" href="${escapeHTML(donate)}" target="_blank" rel="noopener">Donate</a>` : ""}
             ${site ? `<a class="btn btn-ghost" href="${escapeHTML(site)}" target="_blank" rel="noopener">Website ↗</a>` : ""}
             ${saveButton(o.ein, "on-dark")}
             <button class="btn btn-ghost" id="share">${icon.share} Share</button>

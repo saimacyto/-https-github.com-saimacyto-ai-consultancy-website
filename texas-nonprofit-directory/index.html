@@ -8,124 +8,90 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z%27 fill=%27%23c2532f%27/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="preload" href="data/index.json" as="fetch" crossorigin>
 </head>
 <body>
   <header id="site-header"></header>
   <div id="notice" class="notice" hidden><div class="wrap"></div></div>
-
   <section class="hero">
     <div class="wrap">
-      <span class="eyebrow">The Lone Star State's nonprofit directory</span>
-      <h1>Find Texas nonprofits you can <em>trust</em>.</h1>
-      <p class="lead">Search every tax-exempt organization registered in Texas with the IRS — from neighborhood food pantries to statewide foundations — and see who has earned a Transparency Star.</p>
-      <form id="search" class="searchbar" role="search">
+      <h1 id="greeting">Find Texas nonprofits you can trust</h1>
+      <p class="lead">Search every tax-exempt organization registered in Texas with the IRS. Save your favorites and searches here so you can pick up where you left off.</p>
+      <form class="searchbar" action="search.html" role="search">
         <label class="field">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <span class="sr-only">Organization name, cause or EIN</span>
-          <input name="q" type="search" placeholder="Name, cause or EIN — e.g. food bank" autocomplete="off">
-          <span class="kbd" aria-hidden="true">/</span>
+          <span class="sr-only">Organization name, EIN or keywords</span>
+          <input name="q" type="search" placeholder="By name, EIN or keywords" autocomplete="off">
         </label>
         <label class="field">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
           <span class="sr-only">City or ZIP code</span>
-          <input name="city" type="text" placeholder="City or ZIP" list="city-list" autocomplete="off">
+          <input name="city" type="text" placeholder="City or ZIP" autocomplete="off">
         </label>
-        <datalist id="city-list"></datalist>
-        <button class="btn" type="submit">Search</button>
+        <a class="filters-btn" href="search.html" style="text-decoration:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg> Filters</a>
+        <button type="submit">Search</button>
       </form>
-      <div class="quick">
-        <span>Popular:</span>
-        <a href="?q=food+bank#explore">Food banks</a>
-        <a href="?cause=D#explore">Animal welfare</a>
-        <a href="?q=veterans#explore">Veterans</a>
-        <a href="?cause=B&amp;city=Houston#explore">Houston education</a>
-        <a href="?cause=E&amp;city=Austin#explore">Austin health</a>
-      </div>
-      <div class="hero-stats" id="hero-stats" aria-live="polite">
-        <div><b>—</b><span>organizations</span></div>
-        <div><b>—</b><span>501(c)(3) charities</span></div>
-        <div><b>—</b><span>Texas cities</span></div>
-        <div><b>—</b><span>with a Transparency Star</span></div>
-      </div>
+      <p class="quick" style="display:block;margin-top:14px"><b>Looking for a specific organization?</b> Use quotation marks to search by exact name. Example: "Feeding Texas"</p>
     </div>
   </section>
 
-  <main id="explore">
-    <div class="wrap layout">
-      <details class="panel filters" id="filters-panel" open>
-        <summary>Filters <span><span class="count-pill" id="filter-count" hidden></span> <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <form id="filters">
-          <label class="lbl" for="cause">Cause area</label>
-          <select id="cause" name="cause"><option value="">All causes</option></select>
-
-          <label class="lbl" for="type">Organization type</label>
-          <select id="type" name="type">
-            <option value="">All types</option>
-            <option value="03">501(c)(3) charities</option>
-            <option value="04">501(c)(4) social welfare</option>
-            <option value="05">501(c)(5) labor &amp; agricultural</option>
-            <option value="06">501(c)(6) business leagues</option>
-            <option value="07">501(c)(7) social clubs</option>
-            <option value="08">501(c)(8) fraternal societies</option>
-            <option value="19">501(c)(19) veterans</option>
-            <option value="other">Other</option>
-          </select>
-
-          <label class="lbl" for="size">Annual revenue</label>
-          <select id="size" name="size">
-            <option value="">Any size</option>
-            <option value="0-0">None reported</option>
-            <option value="1-99999">Under $100K</option>
-            <option value="100000-999999">$100K – $1M</option>
-            <option value="1000000-9999999">$1M – $10M</option>
-            <option value="10000000-">$10M+</option>
-          </select>
-
-          <label class="lbl">Exempt since</label>
-          <div class="row">
-            <input name="from" type="number" min="1900" max="2100" placeholder="From" aria-label="Exempt since, from year">
-            <input name="to" type="number" min="1900" max="2100" placeholder="To" aria-label="Exempt since, to year">
-          </div>
-
-          <label class="check"><input type="checkbox" name="deductible" value="1"> Tax-deductible donations</label>
-          <label class="check"><input type="checkbox" name="starred" value="1"> Has a Transparency Star</label>
-
-          <div class="actions"><button type="button" class="btn btn-ghost btn-small" id="reset">Clear all filters</button></div>
-        </form>
-      </details>
-
-      <section aria-labelledby="results-title">
-        <div class="results-head">
-          <div>
-            <h2 id="results-title">Organizations</h2>
-            <div class="count" id="count" aria-live="polite"></div>
-          </div>
-          <div class="head-actions">
-          <button type="button" class="btn btn-ghost btn-small" id="save-search" hidden>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg> Save search</button>
-          <label class="sort">Sort
-            <select id="sort">
-              <option value="relevance">Best match</option>
-              <option value="name">Name (A–Z)</option>
-              <option value="revenue">Largest revenue</option>
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-            </select>
-          </label>
-          </div>
-        </div>
-        <div class="active-filters" id="active-filters"></div>
-        <div id="results">
-          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-        </div>
-        <nav class="pager" id="pager" aria-label="Pagination"></nav>
-      </section>
-    </div>
-
+  <main>
     <div class="wrap">
+      <div class="dash-card claim-card">
+        <div>
+          <h2>Update your organization's profile</h2>
+          <p>Claim your free profile, add your mission and results, and earn a Transparency Star donors can recognize.</p>
+          <a class="text-link" href="claim.html">Get started <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="ladder-mini" id="ladder-mini" aria-hidden="true"></div>
+      </div>
+
+      <div class="stat-strip" id="hero-stats" aria-live="polite">
+        <div><b>—</b><span>Texas organizations</span></div>
+        <div><b>—</b><span>501(c)(3) public charities</span></div>
+        <div><b>—</b><span>Texas cities</span></div>
+        <div><b>—</b><span>with a Transparency Star</span></div>
+      </div>
+
+      <section class="block">
+        <div class="section-head">
+          <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg> Collections</h2>
+          <a class="text-link" href="search.html">+ <span style="text-decoration:underline">New</span></a>
+        </div>
+        <div class="dash-card" id="collections"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg> Saved searches</h2>
+          <a class="text-link" href="search.html">+ <span style="text-decoration:underline">New</span></a>
+        </div>
+        <div class="dash-card" id="saved-searches"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg> Grant opportunities</h2>
+        </div>
+        <div class="locked">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          <span>Texas grant alerts matched to your cause come with the Premier plan. <a href="membership.html#plans">See plans</a> · <a href="membership.html">Learn more</a></span>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18"/><path d="M8 16v-4M12 16V8M16 16v-6"/></svg> Landscapes</h2>
+        </div>
+        <div class="locked">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          <span>Compare nonprofits across a county or cause, with exports and charts, on Funder Pro (coming soon). <a href="membership.html#data-plans">Learn more</a></span>
+        </div>
+      </section>
+
       <section class="block" id="browse">
         <div class="section-head">
           <div><h2>Browse by cause</h2><p>Categories follow the IRS National Taxonomy of Exempt Entities (NTEE).</p></div>
@@ -139,10 +105,31 @@
         </div>
         <div class="city-cloud" id="browse-cities"></div>
       </section>
+    </div>
 
+    <section class="promo">
+      <div class="wrap inner">
+        <div>
+          <h2>Access full organization profiles and advanced features</h2>
+          <p>Vet Texas nonprofits in minutes: export any search, share shortlists with your team, track Stars and new filings, and run Texas due-diligence checks before every grant.</p>
+          <div class="actions">
+            <a class="btn btn-gold" href="membership.html#data-plans">See data plans</a>
+            <a href="membership.html">Learn more</a>
+          </div>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <span class="lens"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+          <div class="sheet a">Mission<i></i><i style="width:80%"></i><br>Our focus<i></i><i style="width:65%"></i><br>Programs<i></i><i style="width:85%"></i></div>
+          <div class="sheet b">Financials<i></i><i style="width:75%"></i><i></i><span class="hl">$2,864,805</span></div>
+          <div class="sheet c">Compliance<i></i><span class="hl navy">✓ IRS ✓ Comptroller</span><i style="width:70%"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
       <section class="cta-band">
         <div>
-          <span class="eyebrow" style="color:var(--accent)">For nonprofits</span>
+          <span class="eyebrow" style="color:var(--gold)">For nonprofits</span>
           <h2>Is your organization listed? Claim it free.</h2>
           <p>Add your mission, programs and results, earn a Transparency Star, and show Texas donors and funders exactly why they can trust you.</p>
           <div class="actions">
@@ -152,29 +139,11 @@
         </div>
         <div class="ladder" id="cta-ladder"></div>
       </section>
-
-      <section class="funder-band">
-        <div>
-          <span class="eyebrow" style="color:var(--accent)">For funders &amp; researchers</span>
-          <h2>Vet Texas nonprofits in minutes, not days.</h2>
-          <p>Export any search, share shortlists with your team, track organizations' Stars and filings, and run Texas due-diligence checks before every grant.</p>
-          <div class="actions">
-            <a class="btn" href="membership.html#data-plans">See data plans</a>
-            <a href="saved.html">Try free saved searches</a>
-          </div>
-        </div>
-        <div class="mock" aria-hidden="true">
-          <div class="sheet a">Mission<i></i><i style="width:80%"></i><br>Programs<i></i><i style="width:70%"></i><i style="width:85%"></i><br>Results<i style="width:60%"></i></div>
-          <div class="sheet b">Financials<i></i><i style="width:75%"></i><i></i><span class="hl">$2.4M revenue</span></div>
-          <div class="sheet c">Compliance<i></i><span class="hl" style="background:var(--good-soft);color:var(--good)">✓ IRS · ✓ Comptroller</span><i style="width:70%"></i></div>
-        </div>
-      </section>
     </div>
   </main>
 
-  <div class="toast" id="toast" role="status"></div>
   <footer id="site-footer"></footer>
   <script type="module" src="assets/layout.js"></script>
-  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/home.js"></script>
 </body>
 </html>

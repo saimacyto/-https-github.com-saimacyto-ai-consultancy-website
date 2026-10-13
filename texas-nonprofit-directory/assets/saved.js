@@ -26,6 +26,6 @@ export function removeSearch(query) {
   write(SEARCHES, savedSearches().filter((s) => s.query !== query));
 }
 
-const HEART = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.6C1.5 7.4 3.8 4 7.3 4c2 0 3.6 1.1 4.7 2.7C13.1 5.1 14.7 4 16.7 4c3.5 0 5.8 3.4 4.6 6.9-1.8 5-9.3 9.6-9.3 9.6z"/></svg>';
+const HEART = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
 export const saveButton = (ein, extraClass = "") =>
-  `<button type="button" class="save-btn ${extraClass}" data-save="${ein}" aria-pressed="${isSaved(ein)}" aria-label="${isSaved(ein) ? "Remove from saved" : "Save organization"}">${HEART}</button>`;
+  `<button type="button" class="save-btn ${extraClass}" data-save="${ein}" aria-pressed="${isSaved(ein)}" aria-label="${isSaved(ein) ? "Remove from saved" : "Save to My favorites"}">${HEART}</button>`;

@@ -106,3 +106,7 @@ $("#np-discount").textContent = `Texas nonprofits with a claimed profile get ${M
 renderDataPlans();
 
 $("#badge-row").innerHTML = ["verified", "gold", "platinum"].map((l) => badgeSVG(l, new Date().getFullYear())).join("");
+
+// Enterprise enquiries go to the contact email when one is configured.
+if (CONFIG.contactEmail) $("#contact-sales").href = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent("Enterprise data access")}`;
+else { $("#contact-sales").removeAttribute("href"); $("#contact-sales").setAttribute("aria-disabled", "true"); $("#contact-sales").textContent = "Contact sales — coming soon"; }
