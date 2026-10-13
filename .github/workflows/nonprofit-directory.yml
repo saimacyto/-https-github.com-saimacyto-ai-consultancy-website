@@ -38,12 +38,6 @@ jobs:
         working-directory: texas-nonprofit-directory
         run: node scripts/build-data.mjs
 
-      - name: Deploy to Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
-        run: |
-          npx --yes wrangler@3 pages project create "$CF_PROJECT" --production-branch=main 2>/dev/null || true
-          npx --yes wrangler@3 pages deploy texas-nonprofit-directory --project-name="$CF_PROJECT" --branch=main --commit-dirty=true
-
       - if: vars.DEPLOY_GITHUB_PAGES != 'false'
         uses: actions/configure-pages@v5
       - if: vars.DEPLOY_GITHUB_PAGES != 'false'
@@ -52,3 +46,21 @@ jobs:
           path: texas-nonprofit-directory
       - if: vars.DEPLOY_GITHUB_PAGES != 'false'
         uses: actions/deploy-pages@v4
+
+      # Runs after the GitHub Pages deploy so a Cloudflare problem never blocks the site update.
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: |
+          # Strip stray spaces and newlines that sneak in when secrets are pasted.
+          export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
+          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          if ! [[ "$CLOUDFLARE_ACCOUNT_ID" =~ ^[0-9a-fA-F]{32}$ ]]; then
+            echo "::error::The CLOUDFLARE_ACCOUNT_ID secret must be only your 32-character Account ID (letters a-f and numbers), shown on the Cloudflare dashboard under Workers & Pages. Update the secret and run the workflow again."
+            exit 1
+          fi
+          if ! [[ "$CLOUDFLARE_API_TOKEN" =~ ^[A-Za-z0-9_-]{30,}$ ]]; then
+            echo "::error::The CLOUDFLARE_API_TOKEN secret must be only the API token itself, with no 'curl', 'Bearer' or quotes. Update the secret and run the workflow again."
+            exit 1
+          fi
+          npx --yes wrangler@3 pages project create "$CF_PROJECT" --production-branch=main 2>/dev/null || true
+          npx --yes wrangler@3 pages deploy texas-nonprofit-directory --project-name="$CF_PROJECT" --branch=main --commit-dirty=true
