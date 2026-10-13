@@ -1,4 +1,6 @@
-# Texas Nonprofit Directory
+# TX Nonprofits (txnonprofits.com)
+
+The Texas nonprofit directory, home of the TXVerified Transparency Stars.
 
 A Candid/GuideStar-style directory limited to Texas tax-exempt organizations, built from the
 IRS Exempt Organizations Business Master File (`eo_tx.csv`). Static site — no server, no build tooling, no dependencies.

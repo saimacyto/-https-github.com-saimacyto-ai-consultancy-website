@@ -1,6 +1,10 @@
 // Site settings you can edit without touching the rest of the code.
 export const CONFIG = {
-  siteName: "Texas Nonprofit Directory",
+  siteName: "TX Nonprofits",
+  // Public address of the site. Used for canonical links and badge embed code.
+  siteUrl: "https://txnonprofits.com/",
+  // Name of the verification program shown on Star badges.
+  programName: "TXVerified",
 
   // Where "Claim your profile" applications are sent. Use either:
   //  - a form-backend URL that accepts JSON POSTs (e.g. https://formspree.io/f/xxxxxxx), or

@@ -1,10 +1,11 @@
 import { formatEIN, escapeHTML, avatar } from "./codes.js";
 import { loadOrg, showSampleNotice } from "./data.js";
 import { STARS, loadVerified } from "./tiers.js";
+import { CONFIG } from "./config.js";
 
 const root = document.getElementById("badge");
 const ein = (new URLSearchParams(location.search).get("ein") ?? "").replace(/\D/g, "").padStart(9, "0");
-const base = new URL(".", location.href).href; // site root, wherever it's hosted
+const base = CONFIG.siteUrl; // badges always link to the main domain
 
 function toast(msg) {
   const t = document.getElementById("toast");
@@ -16,9 +17,9 @@ function toast(msg) {
 function render(org, v) {
   const profileURL = `${base}org.html?ein=${org.ein}`;
   const imgURL = `${base}data/badges/${org.ein}.svg`;
-  const alt = `${STARS[v.level].label} — Transparency on Texas Nonprofit Directory`;
+  const alt = `${STARS[v.level].label} — Transparency — ${CONFIG.programName} on TX Nonprofits`;
   const snippet = `<a href="${profileURL}" target="_blank" rel="noopener"><img src="${imgURL}" width="200" height="104" alt="${alt}"></a>`;
-  document.title = `${org.name} Star Badge · Texas Nonprofit Directory`;
+  document.title = `${org.name} Star Badge · TX Nonprofits`;
   root.innerHTML = `
     <h1 style="font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 8px">Your Star badge</h1>
     <p style="color:var(--muted);margin:0 0 24px">Show donors your ${escapeHTML(STARS[v.level].label)} on your website, donation page and email signature. The badge links to your profile so anyone can check it.</p>

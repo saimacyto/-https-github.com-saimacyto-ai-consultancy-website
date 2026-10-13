@@ -198,7 +198,7 @@ if (/^\d{9}$/.test(ein.padStart(9, "0")) && ein) {
   const padded = ein.padStart(9, "0");
   const [org, verified] = await Promise.all([loadOrg(padded), loadVerified()]);
   if (org) {
-    document.title = `Claim ${org.name} · Texas Nonprofit Directory`;
+    document.title = `Claim ${org.name} · TX Nonprofits`;
     renderForm(org, verified[padded]);
   } else renderFinder();
 } else {

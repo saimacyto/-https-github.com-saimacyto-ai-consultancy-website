@@ -145,7 +145,7 @@ function mainSections(o, v) {
 }
 
 function render(o, v) {
-  document.title = `${o.name} · Texas Nonprofit Directory`;
+  document.title = `${o.name} · TX Nonprofits`;
   const dashEIN = formatEIN(o.ein);
   const address = [o.street, `${o.city}, TX ${o.zip}`].filter(Boolean).join(", ");
   const mapsURL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${o.name}, ${address}`)}`;
