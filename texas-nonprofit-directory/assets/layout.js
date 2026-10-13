@@ -12,7 +12,7 @@ const ICONS = {
 const link = (href, icon, label) =>
   `<a href="${href}"${page === href || (href === "./" && page === "index.html") ? ' aria-current="page"' : ""}>${ICONS[icon]}${label}</a>`;
 export const brand = `<span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="currentColor"/></svg></span>
-  <span><span class="name">Texas<i>Nonprofits</i>.</span><small>Directory</small></span>`;
+  <span><span class="name">TX<i>Nonprofits</i>.</span><small>Texas nonprofit directory</small></span>`;
 
 document.getElementById("site-header").innerHTML = `
   <div class="wrap header-row">
@@ -32,7 +32,7 @@ document.getElementById("site-footer").innerHTML = `
   <div class="wrap footer-grid">
     <div>
       <a class="brand" href="./">${brand}</a>
-      <p>Every IRS-recognized tax-exempt organization in Texas, searchable in one place. Listing is not an endorsement.</p>
+      <p>Every IRS-recognized tax-exempt organization in Texas, searchable in one place. Home of the TXVerified Transparency Stars. Independent: not affiliated with the State of Texas or the IRS. Listing is not an endorsement.</p>
     </div>
     <div>
       <h4>Explore</h4>
@@ -56,3 +56,9 @@ document.getElementById("site-footer").innerHTML = `
   </div>
   <div class="wrap footer-base"><span>Source: IRS Exempt Organizations Business Master File</span><span>© ${new Date().getFullYear()} ${CONFIG.siteName}</span></div>`;
 document.querySelector("#site-footer .mark").style.color = "var(--navy)";
+
+// Point search engines at the main domain, whichever address this copy is served from.
+const canonical = document.createElement("link");
+canonical.rel = "canonical";
+canonical.href = new URL(location.pathname.split("/").pop() + location.search, CONFIG.siteUrl).href;
+document.head.append(canonical);

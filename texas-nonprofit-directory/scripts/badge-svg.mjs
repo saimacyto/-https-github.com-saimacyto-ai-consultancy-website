@@ -17,14 +17,14 @@ export const BADGE_LEVELS = Object.keys(LEVELS);
 export function badgeSVG(level, year) {
   const l = LEVELS[level];
   if (!l) throw new Error(`Unknown badge level: ${level}`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="104" viewBox="0 0 200 104" role="img" aria-label="${l.line} — Transparency ${year} — Texas Nonprofit Directory">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="104" viewBox="0 0 200 104" role="img" aria-label="TXVerified ${l.line} — Transparency ${year} — txnonprofits.com">
   <rect x="1" y="1" width="198" height="102" rx="2" fill="#ffffff" stroke="${l.color}" stroke-width="2"/>
   <rect x="7" y="7" width="186" height="90" rx="1" fill="${l.tint}"/>
   <g transform="translate(16 16) scale(1.5)"><path d="${level === "verified" ? CHECK : STAR}" fill="${l.color}"/></g>
   <text x="58" y="34" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#17202f">${l.label}</text>
   <text x="58" y="53" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#3c4658">Transparency ${year}</text>
   <line x1="16" y1="68" x2="184" y2="68" stroke="${l.color}" stroke-opacity=".35"/>
-  <text x="16" y="86" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#17202f">Texas<tspan fill="#0b2a5b">Nonprofit</tspan>Directory</text>
+  <text x="16" y="86" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#17202f">TX<tspan fill="#0b2a5b">Verified</tspan><tspan font-weight="400" fill="#3c4658"> · txnonprofits.com</tspan></text>
 </svg>
 `;
 }
