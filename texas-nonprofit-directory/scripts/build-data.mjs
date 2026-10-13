@@ -62,9 +62,14 @@ const num = (v) => {
 async function loadCSV() {
   if (inputPath) return readFile(inputPath, "utf8");
   console.log(`Downloading ${IRS_URL} ...`);
-  const res = await fetch(IRS_URL);
-  if (!res.ok) throw new Error(`IRS download failed: HTTP ${res.status}`);
-  return res.text();
+  // irs.gov sometimes rejects requests without a browser-like User-Agent; retry transient failures.
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(IRS_URL, { headers: { "User-Agent": "Mozilla/5.0 (texas-nonprofit-directory data build)" } });
+    if (res.ok) return res.text();
+    if (attempt === 4) throw new Error(`IRS download failed: HTTP ${res.status}`);
+    console.log(`HTTP ${res.status}, retrying in ${2 ** attempt}s ...`);
+    await new Promise((r) => setTimeout(r, 2000 * 2 ** (attempt - 1)));
+  }
 }
 
 const text = await loadCSV();
