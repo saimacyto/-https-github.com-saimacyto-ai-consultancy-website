@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About the Data · Texas Nonprofit Directory</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27 fill=%27%23b5452c%27%3E★%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="./"><span class="star">★</span> Texas Nonprofit Directory</a>
+      <nav><a href="./">Search</a><a href="./#browse">Browse</a><a href="about.html">About the data</a></nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrap" style="max-width:760px">
+      <h1>About the data</h1>
+      <p>This directory lists every organization with a Texas address in the IRS
+        <a href="https://www.irs.gov/charities-non-profits/exempt-organizations-business-master-file-extract-eo-bmf">Exempt Organizations Business Master File</a>
+        (EO BMF) — the IRS's official register of tax-exempt organizations. It includes 501(c)(3) public charities and private foundations,
+        churches that have applied for recognition, social welfare groups, trade associations, social clubs, fraternal and veterans' organizations.</p>
+      <p class="last-updated" id="updated"></p>
+
+      <h2>What each profile shows</h2>
+      <ul>
+        <li><b>Identity</b> — legal name, EIN, mailing address and "in care of" contact.</li>
+        <li><b>Status</b> — exemption type, public charity vs. private foundation, whether donations are deductible, and the year the IRS granted exemption.</li>
+        <li><b>Cause</b> — the National Taxonomy of Exempt Entities (NTEE) code assigned by the IRS.</li>
+        <li><b>Finances</b> — revenue, income and assets reported on the most recent Form 990 the IRS has processed.</li>
+      </ul>
+
+      <h2>Limitations</h2>
+      <ul>
+        <li>Organizations appear at their <em>mailing</em> address, which may differ from where they work.</li>
+        <li>Churches and small organizations are not required to file Form 990, so many show no financial data.</li>
+        <li>Organizations whose exemption was automatically revoked are removed from the EO BMF and won't appear here.</li>
+        <li>The IRS refreshes the file monthly; check the IRS Tax Exempt Organization Search for the latest status.</li>
+      </ul>
+
+      <h2>Updating the data</h2>
+      <p>Run <code>node scripts/build-data.mjs</code> to download the latest Texas extract (<code>eo_tx.csv</code>) from irs.gov and regenerate the search index.
+        The included GitHub Actions workflow does this automatically on every deploy and once a month.</p>
+    </div>
+  </main>
+  <footer class="site"><div class="wrap">Listing in this directory is not an endorsement.</div></footer>
+  <script type="module">
+    import { loadMeta } from "./assets/data.js";
+    const meta = await loadMeta();
+    if (meta) document.getElementById("updated").textContent =
+      `Current build: ${meta.count.toLocaleString()} organizations, generated ${new Date(meta.generated).toLocaleDateString("en-US", { dateStyle: "long" })}${meta.sample ? " (demo sample data)" : ""}.`;
+  </script>
+</body>
+</html>

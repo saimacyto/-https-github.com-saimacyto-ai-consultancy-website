@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Texas Nonprofit Directory</title>
+  <meta name="description" content="Search every IRS-recognized tax-exempt organization in Texas by name, city, cause and size.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27 fill=%27%23b5452c%27%3E★%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="./"><span class="star">★</span> Texas Nonprofit Directory</a>
+      <nav><a href="./">Search</a><a href="#browse">Browse</a><a href="about.html">About the data</a></nav>
+    </div>
+  </header>
+  <div id="notice" class="notice" hidden><div class="wrap"></div></div>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Find Texas nonprofits</h1>
+      <p>Search every tax-exempt organization registered in Texas with the IRS — charities, foundations, churches, associations and more.</p>
+      <form id="search" class="searchbar" role="search">
+        <input name="q" type="search" placeholder="Organization name, keyword or EIN" aria-label="Search by name, keyword or EIN" autocomplete="off">
+        <input name="city" type="text" placeholder="City or ZIP" aria-label="City or ZIP" list="city-list" autocomplete="off">
+        <datalist id="city-list"></datalist>
+        <button type="submit">Search</button>
+      </form>
+      <div class="stats-line" id="stats">Loading directory…</div>
+    </div>
+  </section>
+
+  <main>
+    <div class="wrap layout">
+      <aside class="panel filters">
+        <h2>Filter results</h2>
+        <form id="filters">
+          <label for="cause">Cause area</label>
+          <select id="cause" name="cause"><option value="">All causes</option></select>
+
+          <label for="type">Exemption type</label>
+          <select id="type" name="type">
+            <option value="">All types</option>
+            <option value="03">501(c)(3) charities</option>
+            <option value="04">501(c)(4) social welfare</option>
+            <option value="05">501(c)(5) labor &amp; agricultural</option>
+            <option value="06">501(c)(6) business leagues</option>
+            <option value="07">501(c)(7) social clubs</option>
+            <option value="08">501(c)(8) fraternal societies</option>
+            <option value="19">501(c)(19) veterans</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label for="size">Annual revenue</label>
+          <select id="size" name="size">
+            <option value="">Any size</option>
+            <option value="0-0">None reported</option>
+            <option value="1-99999">Under $100K</option>
+            <option value="100000-999999">$100K – $1M</option>
+            <option value="1000000-9999999">$1M – $10M</option>
+            <option value="10000000-">$10M+</option>
+          </select>
+
+          <label>Ruling year</label>
+          <div class="row">
+            <input name="from" type="number" min="1900" max="2100" placeholder="From" aria-label="Ruling year from">
+            <input name="to" type="number" min="1900" max="2100" placeholder="To" aria-label="Ruling year to">
+          </div>
+
+          <label class="check"><input type="checkbox" name="deductible" value="1"> Tax-deductible donations only</label>
+
+          <div class="actions"><button type="button" class="ghost" id="reset">Clear filters</button></div>
+        </form>
+      </aside>
+
+      <section>
+        <div class="results-head">
+          <div class="count" id="count" aria-live="polite"></div>
+          <label>Sort by
+            <select id="sort">
+              <option value="relevance">Relevance</option>
+              <option value="name">Name (A–Z)</option>
+              <option value="revenue">Revenue (high to low)</option>
+              <option value="newest">Newest ruling</option>
+              <option value="oldest">Oldest ruling</option>
+            </select>
+          </label>
+        </div>
+        <div id="results"><div class="loading">Loading organizations…</div></div>
+        <nav class="pager" id="pager" aria-label="Pagination"></nav>
+
+        <section class="block" id="browse">
+          <h2>Browse by cause</h2>
+          <div class="browse" id="browse-causes"></div>
+          <h2 style="margin-top:28px">Browse by city</h2>
+          <div class="browse" id="browse-cities"></div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      Data: IRS Exempt Organizations Business Master File (Texas extract). Listing here is not an endorsement.
+      Always verify an organization's current status with the <a href="https://apps.irs.gov/app/eos/">IRS Tax Exempt Organization Search</a>.
+    </div>
+  </footer>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
