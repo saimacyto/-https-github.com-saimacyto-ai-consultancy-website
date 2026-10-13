@@ -1,4 +1,4 @@
-# TX Nonprofits (txnonprofits.com)
+# TX Nonprofits (txnonprofit.com)
 
 The Texas nonprofit directory, home of the TXVerified Transparency Stars.
 
@@ -24,7 +24,7 @@ a banner appears whenever sample data is loaded. To rebuild the sample: `node sc
 
 ## Deploy
 
-**txnonprofits.com** is served by Cloudflare Workers Builds, connected to this repository. Every push to `main` rebuilds it with these project settings:
+**txnonprofit.com** is served by Cloudflare Workers Builds, connected to this repository. Every push to `main` rebuilds it with these project settings:
 
 | Setting | Value |
 | --- | --- |

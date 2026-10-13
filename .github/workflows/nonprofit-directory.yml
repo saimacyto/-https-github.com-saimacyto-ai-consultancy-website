@@ -2,7 +2,7 @@ name: Deploy TX Nonprofits
 
 # Builds the directory from the latest IRS data and publishes the backup copy on
 # GitHub Pages (unless the repository variable DEPLOY_GITHUB_PAGES is "false").
-# txnonprofits.com is deployed by Cloudflare Workers Builds, which is connected to
+# txnonprofit.com is deployed by Cloudflare Workers Builds, which is connected to
 # this repository and uses texas-nonprofit-directory/wrangler.jsonc.
 
 on:

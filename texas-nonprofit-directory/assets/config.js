@@ -2,7 +2,7 @@
 export const CONFIG = {
   siteName: "TX Nonprofits",
   // Public address of the site. Used for canonical links and badge embed code.
-  siteUrl: "https://txnonprofits.com/",
+  siteUrl: "https://txnonprofit.com/",
   // Name of the verification program shown on Star badges.
   programName: "TXVerified",
 
