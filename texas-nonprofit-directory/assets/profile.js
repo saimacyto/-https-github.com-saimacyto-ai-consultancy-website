@@ -46,7 +46,7 @@ function trustCard(o, v) {
     <div class="trust-meter" aria-label="${rank} of 5 transparency levels">${STAR_ORDER.map((_, i) => `<i class="${i < rank ? "on" : ""}"></i>`).join("")}</div>
     <ul class="trust-steps">${steps}</ul>
     <div style="margin-top:16px">
-      ${v ? (rank < 5 ? `<a class="btn btn-ghost btn-small" href="claim.html?ein=${o.ein}&update=1">Update this profile</a>` : "")
+      ${v ? `<a class="btn btn-small" href="badge.html?ein=${o.ein}">Get your website badge</a>${rank < 5 ? ` <a class="btn btn-ghost btn-small" href="claim.html?ein=${o.ein}&update=1" style="margin-top:8px">Update this profile</a>` : ""}`
           : `<a class="btn btn-small" href="claim.html?ein=${o.ein}">Claim this profile — free</a>`}
     </div>
   </section>`;

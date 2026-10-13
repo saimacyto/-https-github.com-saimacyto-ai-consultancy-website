@@ -47,7 +47,10 @@ Prices, discounts, payment links and where claim applications go are all set in 
 
 1. An organization submits `claim.html`. The application goes to `claimEndpoint` (for example, a Formspree form) or opens an email to `contactEmail`.
 2. Check the EIN and the applicant. An email at the organization's website domain is the strongest signal.
-3. Add the organization to `data/verified.json`, keyed by its 9-digit EIN, then commit. The next deploy shows its Star and details.
+3. Add the organization to `data/verified.json`, keyed by its 9-digit EIN, then commit. The next deploy shows its Star and details, and creates its website badge at `data/badges/<EIN>.svg`.
+4. Send the organization its badge page: `badge.html?ein=<EIN>`. It has a preview and copy-paste code. The badge year comes from `verifiedOn`, so update that date at each annual review.
+
+To rebuild badges without re-downloading IRS data, run `node scripts/build-badges.mjs`.
 
 ```json
 {

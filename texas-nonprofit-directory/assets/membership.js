@@ -1,6 +1,7 @@
 import { STARS, STAR_ORDER, PLANS, starIcon, starBadge } from "./tiers.js";
 import { CONFIG } from "./config.js";
 import { avatar } from "./codes.js";
+import { badgeSVG } from "../scripts/badge-svg.mjs";
 
 const $ = (s) => document.querySelector(s);
 const small = `$${(CONFIG.smallOrgRevenue / 1000).toFixed(0)}K`;
@@ -103,3 +104,5 @@ document.querySelectorAll("[data-billing]").forEach((b) => b.addEventListener("c
 }));
 $("#np-discount").textContent = `Texas nonprofits with a claimed profile get ${Math.round(CONFIG.nonprofitDataDiscount * 100)}% off.`;
 renderDataPlans();
+
+$("#badge-row").innerHTML = ["verified", "gold", "platinum"].map((l) => badgeSVG(l, new Date().getFullYear())).join("");

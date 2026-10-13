@@ -38,6 +38,7 @@ document.getElementById("site-footer").innerHTML = `
       <a href="claim.html">Claim your profile</a>
       <a href="membership.html">Transparency Stars</a>
       <a href="membership.html#plans">Membership plans</a>
+      <a href="membership.html#data-plans">Data plans for funders</a>
     </div>
     <div>
       <h4>Data</h4>
