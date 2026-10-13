@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transparency Stars & Membership · Texas Nonprofit Directory</title>
+  <meta name="description" content="Earn free Transparency Stars by sharing information, and choose a membership plan for extra tools.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z%27 fill=%27%23c2532f%27/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <div id="notice" class="notice" hidden><div class="wrap"></div></div>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">For Texas nonprofits</span>
+      <h1>Show donors why they can trust you.</h1>
+      <p>Claim your free profile, share your story and results, and earn a Transparency Star that donors, funders and volunteers recognize.</p>
+      <div class="actions">
+        <a class="btn" href="claim.html">Claim your profile — free</a>
+        <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.35)" href="#plans">See membership plans</a>
+      </div>
+    </div>
+  </section>
+
+  <main style="padding-top:0">
+    <div class="wrap">
+      <div class="principle">
+        <div class="panel"><h3>Stars are earned, never bought</h3><p>You earn every Star by sharing information. It's free at every level, and paying for a plan never moves your Star.</p></div>
+        <div class="panel"><h3>Search stays fair</h3><p>Results rank by relevance, with a small boost for earned Stars. Paid plans don't change your place in search.</p></div>
+        <div class="panel"><h3>Reviewed by people</h3><p>Our team checks your EIN and contact details before your profile shows as Verified.</p></div>
+      </div>
+
+      <section class="block" id="stars">
+        <div class="section-head"><div><h2>Transparency Stars</h2><p>Five levels. Each one asks you to share a little more.</p></div></div>
+        <div class="stars-grid" id="stars-grid"></div>
+      </section>
+
+      <section class="block two-col">
+        <div>
+          <span class="example-label">Example profile</span>
+          <h2 style="font-size:clamp(1.5rem,3vw,2rem);margin:0 0 12px">What donors see when you earn a Star</h2>
+          <p style="color:var(--ink-2)">Your Star appears next to your name in search results and on your profile. Higher Stars unlock sections for programs, revenue sources, goals and measurable results.</p>
+          <p style="color:var(--ink-2)">You also get an embeddable badge for your website and donation pages.</p>
+          <a class="btn" href="claim.html" style="margin-top:8px">Start with Verified</a>
+        </div>
+        <div id="example"></div>
+      </section>
+
+      <section class="block" id="plans">
+        <div class="section-head" style="justify-content:center;text-align:center"><div><h2>Membership plans</h2><p>Optional tools that help you turn profile visitors into supporters.</p></div></div>
+        <div class="plans" id="plans-grid"></div>
+        <p style="text-align:center;color:var(--muted);margin-top:18px" id="discount-note"></p>
+      </section>
+
+      <section class="block">
+        <div class="section-head"><div><h2>Compare plans</h2></div></div>
+        <div class="table-scroll"><table class="compare" id="compare"></table></div>
+      </section>
+
+      <section class="block" id="data-plans">
+        <div class="section-head" style="justify-content:center;text-align:center"><div>
+          <span class="eyebrow" style="color:var(--accent)">For funders, researchers &amp; donors</span>
+          <h2>Data plans</h2>
+          <p>Find, vet and track Texas nonprofits at scale. <span id="np-discount"></span></p>
+        </div></div>
+        <div class="billing-toggle" role="tablist" aria-label="Billing period">
+          <button role="tab" aria-selected="true" data-billing="annual">Annual <span>save ~17%</span></button>
+          <button role="tab" aria-selected="false" data-billing="monthly">Monthly</button>
+        </div>
+        <div class="plans" id="data-plans-grid"></div>
+      </section>
+
+      <section class="block faq" style="max-width:820px">
+        <div class="section-head"><div><h2>Questions</h2></div></div>
+        <details><summary>Is it really free to get a Star?</summary><p>Yes. Every Star from Verified to Platinum is free. You earn each one by sharing information. Membership plans add optional tools such as donate buttons, analytics and grant alerts.</p></details>
+        <details><summary>Will paying for a plan help us rank higher?</summary><p>No. Search ranks by how well you match what someone searched for, with a small boost for earned Stars. Premier "Spotlight" placements always carry a Sponsored label and never appear inside search results.</p></details>
+        <details><summary>How do you verify our organization?</summary><p>We match your EIN to IRS records and confirm that the person claiming the profile works there. An email at your organization's website domain is the fastest way through. Otherwise we may ask for a letter on your letterhead or a recent board minute.</p></details>
+        <details><summary>Where does the rest of the profile data come from?</summary><p>From the IRS Exempt Organizations Business Master File, which we refresh monthly. Information you add is shown alongside it and labeled as provided by your organization.</p></details>
+        <details><summary>Do Stars expire?</summary><p>Stars stay current as long as you review your profile once a year. Platinum needs updated results each year.</p></details>
+        <details><summary>We're a very small organization. Is there a discount?</summary><p id="faq-discount"></p></details>
+      </section>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module" src="assets/layout.js"></script>
+  <script type="module" src="assets/membership.js"></script>
+</body>
+</html>

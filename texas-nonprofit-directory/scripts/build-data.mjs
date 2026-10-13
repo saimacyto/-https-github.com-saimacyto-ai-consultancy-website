@@ -114,10 +114,10 @@ for (const r of records) {
     ntee: get(r, "NTEE_CD"),
     sortName: titleCase(get(r, "SORT_NAME")),
   };
-  // Compact index row: [ein, name, city, zip5, ntee, subsection, revenue, rulingYear, deductibility, sortName]
+  // Compact index row: [ein, name, city, zip5, ntee, subsection, revenue, rulingYear, deductibility, sortName, assets]
   index.push([
     org.ein, org.name, org.city, org.zip.slice(0, 5), org.ntee, org.subsection,
-    org.revenue, ruling ? Number(ruling.slice(0, 4)) || 0 : 0, org.deductibility, org.sortName,
+    org.revenue, ruling ? Number(ruling.slice(0, 4)) || 0 : 0, org.deductibility, org.sortName, org.assets,
   ]);
   (shards[ein.slice(0, 2)] ??= {})[ein] = org;
 }
