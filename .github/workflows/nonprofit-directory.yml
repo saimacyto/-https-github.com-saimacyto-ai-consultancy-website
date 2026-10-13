@@ -1,9 +1,9 @@
 name: Deploy TX Nonprofits
 
-# Builds the directory from the latest IRS data, then publishes it:
-#  - to Cloudflare Pages (txnonprofits.com) when the CLOUDFLARE_API_TOKEN and
-#    CLOUDFLARE_ACCOUNT_ID repository secrets are set, and
-#  - to GitHub Pages, unless the repository variable DEPLOY_GITHUB_PAGES is "false".
+# Builds the directory from the latest IRS data and publishes the backup copy on
+# GitHub Pages (unless the repository variable DEPLOY_GITHUB_PAGES is "false").
+# txnonprofits.com is deployed by Cloudflare Workers Builds, which is connected to
+# this repository and uses texas-nonprofit-directory/wrangler.jsonc.
 
 on:
   push:
@@ -25,10 +25,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CF_PROJECT: txnonprofits
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -46,21 +42,3 @@ jobs:
           path: texas-nonprofit-directory
       - if: vars.DEPLOY_GITHUB_PAGES != 'false'
         uses: actions/deploy-pages@v4
-
-      # Runs after the GitHub Pages deploy so a Cloudflare problem never blocks the site update.
-      - name: Deploy to Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
-        run: |
-          # Strip stray spaces and newlines that sneak in when secrets are pasted.
-          export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
-          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
-          if ! [[ "$CLOUDFLARE_ACCOUNT_ID" =~ ^[0-9a-fA-F]{32}$ ]]; then
-            echo "::error::The CLOUDFLARE_ACCOUNT_ID secret must be only your 32-character Account ID (letters a-f and numbers), shown on the Cloudflare dashboard under Workers & Pages. Update the secret and run the workflow again."
-            exit 1
-          fi
-          if ! [[ "$CLOUDFLARE_API_TOKEN" =~ ^[A-Za-z0-9_-]{30,}$ ]]; then
-            echo "::error::The CLOUDFLARE_API_TOKEN secret must be only the API token itself, with no 'curl', 'Bearer' or quotes. Update the secret and run the workflow again."
-            exit 1
-          fi
-          npx --yes wrangler@3 pages project create "$CF_PROJECT" --production-branch=main 2>/dev/null || true
-          npx --yes wrangler@3 pages deploy texas-nonprofit-directory --project-name="$CF_PROJECT" --branch=main --commit-dirty=true
