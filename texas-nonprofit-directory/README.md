@@ -24,8 +24,17 @@ a banner appears whenever sample data is loaded. To rebuild the sample: `node sc
 
 ## Deploy
 
-`.github/workflows/nonprofit-directory.yml` downloads fresh IRS data and publishes to GitHub Pages on every push to
-`main`, monthly, and on demand. Enable it under **Settings → Pages → Source: GitHub Actions**.
+**txnonprofits.com** is served by Cloudflare Workers Builds, connected to this repository. Every push to `main` rebuilds it with these project settings:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `texas-nonprofit-directory` |
+| Build command | `node scripts/build-data.mjs` |
+| Deploy command | `npx wrangler deploy` |
+
+`wrangler.jsonc` tells Cloudflare to publish this folder as a static site, and `.assetsignore` keeps scripts and sample data off the website.
+
+`.github/workflows/nonprofit-directory.yml` also publishes a backup copy to GitHub Pages on every push and once a month.
 
 ## Data files
 
