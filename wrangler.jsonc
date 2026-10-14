@@ -1,0 +1,13 @@
+// Cloudflare Workers Builds settings for txnonprofit.com when the project's
+// Root directory is "/". Build command = node scripts/build-data.mjs,
+// Deploy command = npx wrangler deploy.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard.
+  "name": "txnonprofit",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    // The website folder; its .assetsignore keeps scripts and docs from being uploaded.
+    "directory": "./texas-nonprofit-directory"
+  }
+}
