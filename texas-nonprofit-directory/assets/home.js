@@ -2,7 +2,8 @@ import { NTEE_MAJOR, escapeHTML, avatar, causeHue, nteeLabel } from "./codes.js"
 import { F, loadIndex, showSampleNotice } from "./data.js";
 import { STARS, STAR_ORDER, starIcon, loadVerified } from "./tiers.js";
 import { badgeSVG } from "../scripts/badge-svg.mjs";
-import { savedOrgs, savedSearches } from "./saved.js";
+import { savedOrgs, savedSearches, savedReady, signedIn } from "./saved.js";
+import { myProfile, loginURL } from "./auth.js";
 
 const $ = (s) => document.querySelector(s);
 const fmtDate = (t) => new Date(t).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
@@ -14,10 +15,15 @@ $("#ladder-mini").innerHTML = ["bronze", "silver", "gold", "platinum"]
 $("#cta-ladder").innerHTML = STAR_ORDER.map((k) =>
   `<div>${starIcon(k, 26)}<span><b>${STARS[k].label}</b><span>${STARS[k].summary}</span></span></div>`).join("");
 
-// Collections (saved organizations live in this browser).
+// Collections and saved searches come from the member's account.
+await savedReady;
+const me = await myProfile();
+if (me) $("#greeting").textContent = `Welcome back, ${me.display_name}`;
+const signInPrompt = (what) => `<div class="dash-empty"><span class="art"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+  <div><h3>Sign in to see your ${what}</h3><p>Create a free account to save organizations and searches and pick them up on any device.</p><a class="btn btn-small" href="${loginURL("index.html")}">Sign in or create account</a></div></div>`;
 const orgs = savedOrgs();
 const newest = orgs[0]?.savedAt;
-$("#collections").innerHTML = `
+$("#collections").innerHTML = !signedIn() ? signInPrompt("collections") : `
   <div style="color:var(--muted);font-size:.85rem;display:flex;gap:6px;align-items:center">${CLOCK} ${newest ? `Updated ${fmtDate(newest)}` : "Not used yet"}</div>
   <h3 style="font-size:1.25rem;font-weight:600;margin:10px 0 4px">My favorites</h3>
   <p style="margin:0 0 6px">A place to save and follow organizations that interest me. <span class="chip">${orgs.length} organization${orgs.length === 1 ? "" : "s"}</span></p>
@@ -27,7 +33,7 @@ $("#collections").innerHTML = `
   <div style="text-align:center;border-top:1px solid var(--line);margin-top:16px;padding-top:16px"><a href="saved.html">View all</a></div>`;
 
 const searches = savedSearches();
-$("#saved-searches").innerHTML = searches.length
+$("#saved-searches").innerHTML = !signedIn() ? signInPrompt("saved searches") : searches.length
   ? `<div class="mini-list">${searches.slice(0, 5).map((s) =>
       `<a href="search.html${escapeHTML(s.query)}"><span><b>${escapeHTML(s.label)}</b><span>Saved ${fmtDate(s.savedAt)}</span></span></a>`).join("")}</div>
      <div style="text-align:center;border-top:1px solid var(--line);margin-top:16px;padding-top:16px"><a href="saved.html">View all</a></div>`

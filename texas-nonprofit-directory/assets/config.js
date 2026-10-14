@@ -6,11 +6,13 @@ export const CONFIG = {
   // Name of the verification program shown on Star badges.
   programName: "TXVerified",
 
-  // Where "Claim your profile" applications are sent. Use either:
-  //  - a form-backend URL that accepts JSON POSTs (e.g. https://formspree.io/f/xxxxxxx), or
-  //  - an email address (applications open in the applicant's email app).
-  // If both are empty, the claim form explains that applications are not open yet.
-  claimEndpoint: "",
+  // Supabase project that stores member accounts, saved lists and claim requests.
+  // The key is Supabase's public "anon" key: it is meant to be in the browser, and
+  // row-level security in the database decides what each visitor can read or change.
+  supabaseUrl: "https://opxihiumxpmvvvtlhlpd.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9weGloaXVteHBtdnZ2dGxobHBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwMDc2OTksImV4cCI6MjEwNzU4MzY5OX0.7Ze3lCDQhOfvxAjhlln1HuhSBaHkFxwiPw6SAeKUDKA",
+
+  // Address for data-plan and enterprise inquiries (leave empty to hide the email links).
   contactEmail: "",
 
   // Stripe Payment Links (or any checkout URL) for the paid membership plans.

@@ -539,3 +539,33 @@ textarea.code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; fon
 .enterprise ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .enterprise li::before { content: "✓  "; font-weight: 700; color: var(--navy); }
 @media (max-width: 700px) { .enterprise { grid-template-columns: 1fr; } }
+
+/* Account menu and sign-in page */
+.account { display: flex; align-items: center; gap: 16px; }
+.account .sign-in { font-weight: 600; color: #111; text-decoration: none; white-space: nowrap; }
+.account .sign-in:hover { color: var(--navy); text-decoration: underline; }
+.account-menu { position: relative; }
+.account-menu summary { color: #111; list-style: none; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; }
+.account-menu summary::-webkit-details-marker { display: none; }
+.account-menu .initial { width: 34px; height: 34px; display: grid; place-items: center; background: var(--navy); color: #fff; font-weight: 700; }
+.account-menu .who { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-menu .menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 50; min-width: 240px; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: 0 10px 30px rgba(0,0,0,.12); display: flex; flex-direction: column; }
+.account-menu .menu-head { padding: 14px 16px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
+.account-menu .menu-head span { color: var(--muted); font-size: .85rem; overflow-wrap: anywhere; }
+.account-menu .menu a, .account-menu .menu button { padding: 11px 16px; text-align: left; color: var(--ink); text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; }
+.account-menu .menu a:hover, .account-menu .menu button:hover { background: var(--surface-2); }
+.account-menu .menu button { border-top: 1px solid var(--line); }
+@media (max-width: 960px) { .account { margin-left: auto; } .header-row .account .btn-small { margin-left: 0; } }
+@media (max-width: 600px) { .account .btn-small { display: none; } .account-menu .who { display: none; } }
+.auth-wrap { max-width: 460px; margin: 0 auto; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-strong); margin-bottom: 22px; }
+.auth-tabs button { padding: 12px; font: inherit; font-weight: 600; background: var(--surface); color: var(--ink); border: 0; cursor: pointer; }
+.auth-tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.auth-form label { display: block; font-weight: 600; margin: 14px 0 6px; }
+.auth-form .btn { width: 100%; margin-top: 20px; justify-content: center; }
+.auth-form .link-btn { background: none; border: 0; padding: 0; color: var(--navy-2); font: inherit; text-decoration: underline; cursor: pointer; }
+.admin-claim { display: grid; gap: 6px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.admin-claim dl { display: grid; grid-template-columns: 130px 1fr; gap: 4px 12px; margin: 6px 0; font-size: .92rem; }
+.admin-claim dt { color: var(--muted); }
+.admin-claim dd { margin: 0; overflow-wrap: anywhere; }
+.admin-claim .actions { display: flex; gap: 10px; }
