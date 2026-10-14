@@ -1,7 +1,7 @@
 import { NTEE_MAJOR, SUBSECTION_SHORT, nteeLabel, formatEIN, compactMoney, escapeHTML, avatar } from "./codes.js";
 import { F, loadIndex, showSampleNotice } from "./data.js";
 import { STARS, starBadge, loadVerified } from "./tiers.js";
-import { saveButton, toggleOrg, saveSearch } from "./saved.js";
+import { saveButton, toggleOrg, saveSearch, savedReady } from "./saved.js";
 
 const PAGE_SIZE = 20;
 const COMMON_TYPES = new Set(["03", "04", "05", "06", "07", "08", "19"]);
@@ -291,18 +291,22 @@ $("#pager").addEventListener("click", (e) => {
   update({ page });
   $("#results-top").scrollIntoView({ behavior: "smooth", block: "start" });
 });
-$("#results").addEventListener("click", (e) => {
+$("#results").addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-save]");
   if (!btn) return;
   const r = rows.find((x) => x[F.EIN] === btn.dataset.save);
-  const saved = toggleOrg({ ein: r[F.EIN], name: r[F.NAME], city: r[F.CITY], ntee: r[F.NTEE] });
+  let saved;
+  try { saved = await toggleOrg({ ein: r[F.EIN], name: r[F.NAME], city: r[F.CITY], ntee: r[F.NTEE] }); } catch (err) { toast(err.message); return; }
+  if (saved === null) return;
   btn.setAttribute("aria-pressed", saved);
   btn.setAttribute("aria-label", saved ? "Remove from saved" : "Save organization");
   toast(saved ? "Added to My favorites" : "Removed from My favorites");
 });
-$("#save-search").addEventListener("click", () => {
+$("#save-search").addEventListener("click", async () => {
   const parts = [state.q && `“${state.q}”`, ...activeFilters().map(([, l]) => l)].filter(Boolean);
-  toast(saveSearch(parts.join(" · ") || "All organizations", location.search) ? "Search saved to your dashboard" : "Couldn't save in this browser");
+  try {
+    if (await saveSearch(parts.join(" · ") || "All organizations", location.search)) toast("Search saved to your dashboard");
+  } catch (err) { toast(err.message); }
 });
 document.addEventListener("keydown", (e) => {
   if (e.key === "/" && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); searchForm.q.focus(); }
@@ -311,7 +315,7 @@ document.addEventListener("keydown", (e) => {
 syncForms();
 showSampleNotice();
 try {
-  [rows, verified] = await Promise.all([loadIndex(), loadVerified()]);
+  [rows, verified] = await Promise.all([loadIndex(), loadVerified(), savedReady]);
   haystack = rows.map((r) => normalize(`${r[F.NAME]} ${r[F.SORT] && r[F.SORT] !== r[F.NAME] ? r[F.SORT] : ""}`));
   const cities = {};
   for (const r of rows) cities[r[F.CITY]] = (cities[r[F.CITY]] ?? 0) + 1;

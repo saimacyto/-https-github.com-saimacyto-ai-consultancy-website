@@ -1,5 +1,6 @@
 // Shared header and footer, injected into every page.
 import { CONFIG } from "./config.js";
+import { myProfile, loginURL, signOut } from "./auth.js";
 
 const page = location.pathname.split("/").pop() || "index.html";
 const ICONS = {
@@ -24,9 +25,30 @@ document.getElementById("site-header").innerHTML = `
       ${link("membership.html", "star", "Stars &amp; plans")}
       ${link("about.html", "info", "About")}
     </nav>
-    <a class="btn btn-small" href="claim.html">Claim your nonprofit</a>
+    <div class="account" id="account"><a class="btn btn-small" href="claim.html">Claim your nonprofit</a></div>
   </div>`;
 document.querySelector("#site-header .mark").style.color = "var(--gold)";
+
+// Account menu: "Sign in" for visitors, a name menu for members.
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+myProfile().then((me) => {
+  const box = document.getElementById("account");
+  if (!me) {
+    if (page !== "login.html") box.insertAdjacentHTML("afterbegin", `<a class="sign-in" href="${loginURL()}">Sign in</a>`);
+    return;
+  }
+  box.innerHTML = `<details class="account-menu">
+    <summary aria-label="Account menu"><span class="initial" aria-hidden="true">${esc(me.display_name[0].toUpperCase())}</span><span class="who">${esc(me.display_name)}</span></summary>
+    <div class="menu">
+      <div class="menu-head"><b>${esc(me.display_name)}</b><span>${esc(me.email)}</span></div>
+      <a href="./">My dashboard</a>
+      <a href="saved.html">Saved &amp; claims</a>
+      <a href="claim.html">Claim a nonprofit</a>
+      ${me.is_admin ? '<a href="admin.html">Review claims (admin)</a>' : ""}
+      <button type="button" id="sign-out">Sign out</button>
+    </div></details>`;
+  document.getElementById("sign-out").addEventListener("click", signOut);
+});
 
 document.getElementById("site-footer").innerHTML = `
   <div class="wrap footer-grid">

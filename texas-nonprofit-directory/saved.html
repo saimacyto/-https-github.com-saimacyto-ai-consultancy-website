@@ -17,7 +17,12 @@
   <main>
     <div class="wrap" style="max-width:900px">
       <h1 style="font-size:clamp(2rem,4vw,2.8rem);margin:0 0 6px">Collections &amp; saved searches</h1>
-      <p style="color:var(--muted);margin:0 0 28px">Saved items stay in this browser — no account needed. Clearing your browser data removes them.</p>
+      <p style="color:var(--muted);margin:0 0 28px">Everything here is saved to your account, so it's on every device you sign in on.</p>
+      <div id="saved-main">
+      <section class="panel" id="my-claims" hidden style="margin-bottom:18px">
+        <h2>My claim requests</h2>
+        <div class="saved-list"></div>
+      </section>
       <section class="panel">
         <h2>My favorites</h2>
         <div class="saved-list" id="saved-orgs"></div>
@@ -26,6 +31,7 @@
         <h2>Saved searches</h2>
         <div class="saved-list" id="saved-searches"></div>
       </section>
+      </div>
     </div>
   </main>
   <footer id="site-footer"></footer>

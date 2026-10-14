@@ -2,6 +2,7 @@ import { formatEIN, compactMoney, escapeHTML, avatar } from "./codes.js";
 import { F, loadIndex, loadOrg, showSampleNotice } from "./data.js";
 import { PLANS, STARS, STAR_ORDER, priceFor, starIcon, loadVerified } from "./tiers.js";
 import { CONFIG } from "./config.js";
+import { supabase, currentUser, loginURL } from "./auth.js";
 
 const root = document.getElementById("claim");
 const params = new URLSearchParams(location.search);
@@ -64,7 +65,7 @@ async function renderFinder() {
 }
 
 // Step 2: application form.
-function renderForm(org, existing) {
+function renderForm(org, existing, user) {
   const disc = org.revenue < CONFIG.smallOrgRevenue;
   const planCard = (key) => {
     const price = priceFor(key, org.revenue);
@@ -82,7 +83,7 @@ function renderForm(org, existing) {
       <div class="form-grid">
         <div><label for="name">Full name</label><input id="name" name="name" class="field-input" required autocomplete="name"></div>
         <div><label for="title">Title / role</label><input id="title" name="title" class="field-input" required placeholder="Executive Director"></div>
-        <div><label for="email">Work email</label><input id="email" name="email" type="email" class="field-input" required autocomplete="email"><div class="hint">Use an address at your organization's website domain for the fastest review.</div></div>
+        <div><label for="email">Work email</label><input id="email" name="email" type="email" class="field-input" required autocomplete="email" value="${escapeHTML(user.email)}"><div class="hint">Use an address at your organization's website domain for the fastest review.</div></div>
         <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" class="field-input" autocomplete="tel"></div>
       </div>
 
@@ -158,20 +159,23 @@ function renderForm(org, existing) {
   });
 }
 
+// Claim requests are stored with the member's account and reviewed on admin.html.
 async function submit(application) {
-  if (CONFIG.claimEndpoint) {
-    const res = await fetch(CONFIG.claimEndpoint, {
-      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(application),
-    });
-    if (!res.ok) throw new Error("We couldn't send your request. Please try again in a moment.");
-    return;
-  }
-  if (CONFIG.contactEmail) {
-    const body = Object.entries(application).map(([k, v]) => `${k}: ${v}`).join("\n");
-    location.href = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent(`Profile claim: ${application.organization} (${formatEIN(application.ein)})`)}&body=${encodeURIComponent(body)}`;
-    return;
-  }
-  throw new Error("Profile claims open soon — we're finishing our review process. Please check back shortly.");
+  const { error } = await supabase.from("claims").insert({ ein: application.ein, org_name: application.organization, details: application });
+  if (error) throw new Error("We couldn't send your request. Please try again in a moment.");
+}
+
+function renderSignIn(org) {
+  root.innerHTML = `
+    <h1 style="font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 8px">Claim your profile</h1>
+    ${steps(1)}
+    <div class="org-summary">${avatar(org.name, org.ntee)}<div><b>${escapeHTML(org.name)}</b><span>${escapeHTML(org.city)}, TX · EIN ${formatEIN(org.ein)}</span></div>
+      <a href="claim.html" style="margin-left:auto;font-size:.9rem">Not your organization?</a></div>
+    <section class="panel" style="text-align:center;padding:36px 24px">
+      <h2>Sign in to continue</h2>
+      <p style="color:var(--muted);max-width:460px;margin:0 auto 20px">Claims are linked to a free account so you can check the status of your request and manage your profile later.</p>
+      <a class="btn" href="${loginURL(`claim.html?ein=${org.ein}${isUpdate ? "&update=1" : ""}`)}">Sign in or create account</a>
+    </section>`;
 }
 
 function renderDone(org, app) {
@@ -199,7 +203,9 @@ if (/^\d{9}$/.test(ein.padStart(9, "0")) && ein) {
   const [org, verified] = await Promise.all([loadOrg(padded), loadVerified()]);
   if (org) {
     document.title = `Claim ${org.name} · TX Nonprofits`;
-    renderForm(org, verified[padded]);
+    const user = await currentUser();
+    if (user) renderForm(org, verified[padded], user);
+    else renderSignIn(org);
   } else renderFinder();
 } else {
   renderFinder();

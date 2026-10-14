@@ -4,7 +4,7 @@ import {
 } from "./codes.js";
 import { F, loadOrg, loadIndex, showSampleNotice } from "./data.js";
 import { STARS, STAR_ORDER, starBadge, starIcon, loadVerified } from "./tiers.js";
-import { saveButton, toggleOrg } from "./saved.js";
+import { saveButton, toggleOrg, savedReady } from "./saved.js";
 
 const root = document.getElementById("profile");
 const ein = (new URLSearchParams(location.search).get("ein") ?? "").replace(/\D/g, "").padStart(9, "0");
@@ -190,10 +190,13 @@ function render(o, v) {
     </div>
     <div class="toast" id="toast" role="status"></div>`;
 
-  root.querySelector("[data-save]").addEventListener("click", (e) => {
-    const saved = toggleOrg(o);
-    e.currentTarget.setAttribute("aria-pressed", saved);
-    e.currentTarget.setAttribute("aria-label", saved ? "Remove from saved" : "Save organization");
+  root.querySelector("[data-save]").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    let saved;
+    try { saved = await toggleOrg(o); } catch (err) { toast(err.message); return; }
+    if (saved === null) return;
+    btn.setAttribute("aria-pressed", saved);
+    btn.setAttribute("aria-label", saved ? "Remove from saved" : "Save organization");
     toast(saved ? "Saved — see it under Saved" : "Removed from saved");
   });
   document.getElementById("share").addEventListener("click", async () => {
@@ -226,7 +229,7 @@ async function renderSimilar(o) {
 }
 
 showSampleNotice();
-const [org, verified] = /^\d{9}$/.test(ein) ? await Promise.all([loadOrg(ein), loadVerified()]) : [null, {}];
+const [org, verified] = /^\d{9}$/.test(ein) ? await Promise.all([loadOrg(ein), loadVerified(), savedReady]) : [null, {}];
 if (org) {
   render(org, verified[ein]);
   renderSimilar(org);

@@ -52,12 +52,22 @@ Two separate ladders, modeled on Candid's Seals of Transparency:
 - **Membership plans** (paid, optional): Community (free), Plus, Premier. These add tools such as donate buttons, analytics and grant alerts. They never change a Star or search ranking.
 - **Data plans** for funders and researchers: Funder Pro and Funder Compliance, shown as "Coming soon" until `funderPlansLive` is set in `assets/config.js`.
 
-Prices, discounts, payment links and where claim applications go are all set in `assets/config.js`.
+Prices, discounts, payment links and the Supabase connection are all set in `assets/config.js`.
+
+### Member accounts
+
+Searching and profiles are open to everyone. Signing in (`login.html`) unlocks saved organizations, saved searches, the personal dashboard and claiming a nonprofit. Accounts live in the Supabase project **txnonprofit** (`supabaseUrl` in `assets/config.js`):
+
+- `profiles`: one row per member. Set `is_admin = true` to let a member review claims on `admin.html`.
+- `saved_orgs` and `saved_searches`: each member's lists.
+- `claims`: claim requests, with status `pending`, `approved` or `rejected`.
+
+Row-level security limits members to their own rows; only admins can read and update every claim. The Supabase client is bundled in `assets/vendor/supabase.js` (supabase-js 2.45.4), so the site loads no third-party scripts.
 
 ### Approving a claim
 
-1. An organization submits `claim.html`. The application goes to `claimEndpoint` (for example, a Formspree form) or opens an email to `contactEmail`.
-2. Check the EIN and the applicant. An email at the organization's website domain is the strongest signal.
+1. A signed-in member submits `claim.html`, and the request is saved to the `claims` table.
+2. An admin opens `admin.html` and checks the EIN and the applicant. An email at the organization's website domain is the strongest signal. Then the admin approves or rejects the request.
 3. Add the organization to `data/verified.json`, keyed by its 9-digit EIN, then commit. The next deploy shows its Star and details, and creates its website badge at `data/badges/<EIN>.svg`.
 4. Send the organization its badge page: `badge.html?ein=<EIN>`. It has a preview and copy-paste code. The badge year comes from `verifiedOn`, so update that date at each annual review.
 
